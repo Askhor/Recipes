@@ -1,5 +1,9 @@
 package data;
 
+import files.json.JSON;
+import files.json.JSONFormatException;
+import files.json.JSONObject;
+import files.json.JSONValue;
 import util.AList;
 
 import java.util.*;
@@ -8,6 +12,7 @@ import java.util.*;
  * Represents entire recipes
  */
 public class Recipe {
+    private String name;
     /**
      * The categories with which this recipe will be associated
      */
@@ -16,7 +21,6 @@ public class Recipe {
      * The separate steps in this recipe
      */
     private final AList<RecipeStep> steps = new AList<>();
-    private String name;
     /**
      * A short (or lengthy) introduction to the recipe
      */
@@ -71,5 +75,30 @@ public class Recipe {
             out.addAll(step.getIngredients());
         }
         return out;
+    }
+
+    public JSONObject toJSON() {
+        return JSON.object(
+                "name", JSON.string(getName()),
+                "categories", JSON.list(getCategories(), c -> JSON.string(c.getName())),
+                "introduction", JSON.string(getIntroduction()),
+                "steps", JSON.list(getSteps(), RecipeStep::toJSON)
+        );
+    }
+
+    public void loadJSON(JSONValue json) throws JSONFormatException {
+        var obj = json.object();
+        setName(obj.get("name").string());
+
+        for (var c : obj.get("categories").list())
+            addCategory(Category.get(c.string()));
+
+        setIntroduction(obj.get("introduction").string());
+
+        for (var s : obj.get("steps").list()) {
+            var step = new RecipeStep();
+            step.loadJSON(s);
+            addStep(step);
+        }
     }
 }

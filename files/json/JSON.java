@@ -1,9 +1,13 @@
 package files.json;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class JSON {
     private static final Pattern regex = Pattern.compile("[\\sa-zA-Z\\d.,\\[\\]{}:\"#<>\\-+_!&/?ßöäüÖÜÄ\\\\]*");
+
     public static boolean basicValidityCheck(String json) {
         return regex.matcher(json).matches();
     }
@@ -35,6 +39,7 @@ public class JSON {
             }
         };
     }
+
     public static JSONObject string(String string) {
         return new JSONObject() {
             @Override
@@ -43,7 +48,7 @@ public class JSON {
                 out.print(string
                         .replace("\\", "\\\\")
                         .replace("\n", "\\n")
-                        .replace("\"","\\\"")
+                        .replace("\"", "\\\"")
                 );
                 out.print('"');
             }
@@ -93,6 +98,10 @@ public class JSON {
                 return false;
             }
         };
+    }
+
+    public static <T> JSONObject list(Collection<T> values, Function<T, JSONObject> transform) {
+        return list(values.stream().map(transform).toArray(JSONObject[]::new));
     }
 
     public static JSONObject object(Object... values) {

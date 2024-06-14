@@ -21,12 +21,12 @@ public class IngredientViewer extends JPanel {
     private void initialise(IngredientInfo ingredient) {
         text.setText(
                 ""
-                        + ingredient.getAmount()
-                        + ingredient.getIngredient().unit()
-                        + " "
-                        + ingredient.getIngredient().name()
-                        + " "
-                        + ingredient.getNotes()
+                + ingredient.getAmount()
+                + ingredient.getIngredient().unit()
+                + " "
+                + ingredient.getIngredient().name()
+                + " "
+                + ingredient.getNotes()
 
         );
     }

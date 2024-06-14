@@ -84,7 +84,8 @@ public abstract class JSONValue {
                 case '}' -> {
                     break loop;
                 }
-                default -> throw new JSONFormatException("Expected (}) or (,) , but " + in.c() + " was found. The problematic characters are " + in.readNext(10));
+                default ->
+                        throw new JSONFormatException("Expected (}) or (,) , but " + in.c() + " was found. The problematic characters are " + in.readNext(10));
             }
         }
         in.move(1);
