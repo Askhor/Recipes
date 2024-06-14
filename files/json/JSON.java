@@ -1,6 +1,12 @@
 package files.json;
 
+import java.util.regex.Pattern;
+
 public class JSON {
+    private static final Pattern regex = Pattern.compile("[\\sa-zA-Z\\d.,\\[\\]{}:\"#<>\\-+_!&/?ßöäüÖÜÄ\\\\]*");
+    public static boolean basicValidityCheck(String json) {
+        return regex.matcher(json).matches();
+    }
 
     public static JSONObject number(int num) {
         return new JSONObject() {
@@ -29,7 +35,6 @@ public class JSON {
             }
         };
     }
-
     public static JSONObject string(String string) {
         return new JSONObject() {
             @Override
@@ -38,6 +43,7 @@ public class JSON {
                 out.print(string
                         .replace("\\", "\\\\")
                         .replace("\n", "\\n")
+                        .replace("\"","\\\"")
                 );
                 out.print('"');
             }
@@ -130,5 +136,12 @@ public class JSON {
                 return values.length != 0;
             }
         };
+    }
+
+    public static JSONValue parse(String string) throws JSONFormatException {
+        if (!basicValidityCheck(string))
+            throw new JSONFormatException("JSON is ill-formatted; It probably contains some illegal characters");
+        var stream = new JSONValue.ParseStream(string);
+        return JSONValue.read(stream);
     }
 }
