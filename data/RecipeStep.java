@@ -25,6 +25,7 @@ public class RecipeStep {
     public void setDescription(String description) {
         this.description = description;
     }
+
     public List<IngredientInfo> getIngredients() {
         return ingredients.view;
     }

@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 
 /**
  * A simple class to implement the functionality of Actions
- * */
+ */
 public class SimpleAction extends AbstractAction {
     private final Runnable action;
 

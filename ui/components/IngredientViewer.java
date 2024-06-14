@@ -5,7 +5,6 @@ import data.IngredientInfo;
 import javax.swing.*;
 
 public class IngredientViewer extends JPanel {
-    private final IngredientInfo ingredient;
     private final JLabel text = new JLabel();
 
     {
@@ -16,7 +15,10 @@ public class IngredientViewer extends JPanel {
     }
 
     public IngredientViewer(IngredientInfo ingredient) {
-        this.ingredient = ingredient;
+        initialise(ingredient);
+    }
+
+    private void initialise(IngredientInfo ingredient) {
         text.setText(
                 ""
                         + ingredient.getAmount()

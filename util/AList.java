@@ -2,13 +2,14 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Simply an ArrayList with some extra features
- * */
+ */
 public class AList<T> extends ArrayList<T> {
-    public final List<T> view = new ListView<>(this);
+    public final List<T> view = Collections.unmodifiableList(this);
 
     public AList() {
         super();
