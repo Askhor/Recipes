@@ -37,7 +37,7 @@ public class IngredientInfo {
     public JSONObject toJSON() {
         return JSON.object(
                 "name", JSON.string(ingredient.name()),
-                "amount", JSON.number(amount),
+                "amount", JSON.num(amount),
                 "notes", JSON.string(notes)
         );
     }

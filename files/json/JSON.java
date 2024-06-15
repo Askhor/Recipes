@@ -1,18 +1,17 @@
 package files.json;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class JSON {
-    private static final Pattern regex = Pattern.compile("[\\sa-zA-Z\\d.,\\[\\]{}:\"#<>\\-+_!&/?ßöäüÖÜÄ\\\\]*");
+    private static final Pattern regex = Pattern.compile("[\\sa-zA-Z\\d.,\\[\\]{}():\"#<>\\-+_!&/?ßöäüÖÜÄ\\\\;=%@*|~'•^$`´·\u200C…]*");
 
     public static boolean basicValidityCheck(String json) {
         return regex.matcher(json).matches();
     }
 
-    public static JSONObject number(int num) {
+    public static JSONObject num(int num) {
         return new JSONObject() {
             @Override
             protected void print(LineStream out) {
@@ -26,7 +25,7 @@ public class JSON {
         };
     }
 
-    public static JSONObject number(double num) {
+    public static JSONObject num(double num) {
         return new JSONObject() {
             @Override
             protected void print(LineStream out) {
@@ -147,9 +146,33 @@ public class JSON {
         };
     }
 
+    public static JSONObject bool(boolean value) {
+        return new JSONObject() {
+            @Override
+            protected void print(LineStream out) {
+                out.print(value ? "true" : "false");
+            }
+
+            @Override
+            protected boolean isMultiline() {
+                return false;
+            }
+        };
+
+    }
+
     public static JSONValue parse(String string) throws JSONFormatException {
-        if (!basicValidityCheck(string))
-            throw new JSONFormatException("JSON is ill-formatted; It probably contains some illegal characters");
+        if (!basicValidityCheck(string)) {
+            var problemCharacters = new StringBuilder();
+
+            for (var chars : string.codePoints().distinct().mapToObj(Character::toChars).toList()) {
+                for (var c : chars) {
+                    if (!regex.matcher("" + c).matches())
+                        problemCharacters.append(c);
+                }
+            }
+            throw new JSONFormatException("JSON is ill-formatted; It contains the following illegal characters (" + problemCharacters + ")");
+        }
         var stream = new JSONValue.ParseStream(string);
         return JSONValue.read(stream);
     }

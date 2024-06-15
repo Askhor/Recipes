@@ -7,10 +7,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public abstract class JSONValue {
-    private static final Pattern INTEGER = Pattern.compile("\\d*");
+    private static final Pattern INTEGER = Pattern.compile("[-+]?\\d*");
 
-    protected abstract String type();
+    public abstract String type();
 
+    public boolean bool() throws JSONFormatException {
+        throw new JSONFormatException("A boolean was expected, but a " + type() + " was found");
+    }
     public int num() throws JSONFormatException {
         throw new JSONFormatException("A number was expected, but a " + type() + " was found");
     }
@@ -40,6 +43,7 @@ public abstract class JSONValue {
                 case "String" -> string();
                 case "Number" -> num();
                 case "Real Number" -> real();
+                case "Bool" -> bool();
                 default -> "Error";
             }).toString();
         } catch (JSONFormatException e) {
@@ -55,10 +59,45 @@ public abstract class JSONValue {
             case '{' -> readObject(in);
             case '[' -> readList(in);
             case '"' -> readString(in);
+            case 'n' -> {
+                in.expect('n');
+                in.expect('u');
+                in.expect('l');
+                in.expect('l');
+                yield null;
+            }
+            case 't','f' -> readBool(in);
             default -> {
-                if (!Character.isDigit(c) && c != '.')
+                if (!Character.isDigit(c) && c != '.' && c != '-' && c != '+')
                     throw new JSONFormatException("JSON was incorrectly formatted. The problematic characters are " + in.readNext(10));
                 yield readNumber(in);
+            }
+        };
+    }
+
+    protected static JSONValue readBool(ParseStream in) throws JSONFormatException {
+        var value = in.c() == 't';
+        if (value) {
+            in.expect('t');
+            in.expect('r');
+            in.expect('u');
+            in.expect('e');
+        } else {
+            in.expect('f');
+            in.expect('a');
+            in.expect('l');
+            in.expect('s');
+            in.expect('e');
+        }
+        return new JSONValue() {
+            @Override
+            public String type() {
+                return "Bool";
+            }
+
+            @Override
+            public boolean bool() {
+                return value;
             }
         };
     }
@@ -92,7 +131,7 @@ public abstract class JSONValue {
 
         return new JSONValue() {
             @Override
-            protected String type() {
+            public String type() {
                 return "Object";
             }
 
@@ -127,7 +166,7 @@ public abstract class JSONValue {
 
         return new JSONValue() {
             @Override
-            protected String type() {
+            public String type() {
                 return "List";
             }
 
@@ -144,7 +183,7 @@ public abstract class JSONValue {
             int i = Integer.parseInt(rawNumber);
             return new JSONValue() {
                 @Override
-                protected String type() {
+                public String type() {
                     return "Number";
                 }
 
@@ -162,7 +201,7 @@ public abstract class JSONValue {
             double d = Double.parseDouble(rawNumber);
             return new JSONValue() {
                 @Override
-                protected String type() {
+                public String type() {
                     return "Real Number";
                 }
 
@@ -183,7 +222,7 @@ public abstract class JSONValue {
 
         return new JSONValue() {
             @Override
-            protected String type() {
+            public String type() {
                 return "String";
             }
 

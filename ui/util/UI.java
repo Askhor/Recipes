@@ -1,5 +1,7 @@
 package ui.util;
 
+import google.fonts.GoogleFonts;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import java.util.Map;
 public class UI {
 
     public static final Map<String, Font> ALL_FONTS = new HashMap<>();
-    private static final String[] FONT_HIERARCHY = {"Comic Sans MS", "Arial"};
+    private static final String[] FONT_HIERARCHY = {"Anonymous Pro", "Comic Sans MS", "Arial"};
 
     static {
         for (var f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
@@ -42,6 +44,8 @@ public class UI {
     private static Font findBestGlobalFont() {
         for (var name : FONT_HIERARCHY) {
             Font font = ALL_FONTS.get(name);
+            if (font != null) return font;
+            font = GoogleFonts.get(name);
             if (font != null) return font;
         }
 
