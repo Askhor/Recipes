@@ -2,7 +2,7 @@ package data;
 
 /**
  * Die Einheit für eine Zutat: Volumen, Masse oder Stückzahl
- * */
+ */
 public enum Einheit {
     MILLILITER("ml"), GRAMM("g"), STUECK("stück");
     public final String name;

@@ -7,7 +7,7 @@ import files.json.JSONValue;
 
 /**
  * Speichert zusätzlich zu welcher Zutat es isst, auch wie viel davon und Notizen
- * */
+ */
 public class ZutatInfo {
     private Zutat zutat;
     private int menge;
@@ -39,7 +39,7 @@ public class ZutatInfo {
 
     /**
      * Konvertiert diese Instanz zu der JSON-Representation
-     * */
+     */
     public JSONObject toJSON() {
         return JSON.object(
                 "name", JSON.string(zutat.name()),
@@ -50,7 +50,7 @@ public class ZutatInfo {
 
     /**
      * Lädt die Daten, die in der JSON-Representation gespeichert sind, in dieses ZutatInfo-Objekt
-     * */
+     */
     public void loadJSON(JSONValue json) throws JSONFormatException {
         var obj = json.object();
         setZutat(Zutat.get(obj.get("name").string()));

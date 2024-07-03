@@ -1,13 +1,14 @@
 package files.json;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
  * Diese Klasse ist dazu da, das JSON-Format zu lesen und zu schreiben
  * <a href="https://en.wikipedia.org/wiki/JSON">Wikipedia - JSON</a>
- * */
+ */
 public class JSON {
     private static final Pattern regex = Pattern.compile("[\\sa-zA-Z\\d.,\\[\\]{}():\"#<>\\-+_!&/?ßöäüÖÜÄ\\\\;=%@*|~'•^$`´·\u200C…]*");
 
@@ -17,7 +18,7 @@ public class JSON {
 
     /**
      * @return Das JSON-Objekt für eine Zahl
-     * */
+     */
     public static JSONObject num(int num) {
         return new JSONObject() {
             @Override
@@ -35,7 +36,7 @@ public class JSON {
 
     /**
      * @return Das JSON-Objekt für eine Zahl
-     * */
+     */
     public static JSONObject num(double num) {
         return new JSONObject() {
             @Override
@@ -53,7 +54,7 @@ public class JSON {
 
     /**
      * @return Das JSON-Objekt für einen String
-     * */
+     */
     public static JSONObject string(String string) {
         return new JSONObject() {
             @Override
@@ -77,7 +78,7 @@ public class JSON {
 
     /**
      * @return Das JSON-Objekt für eine Liste
-     * */
+     */
     public static JSONObject list(JSONObject... values) {
         return new JSONObject() {
             @Override
@@ -121,7 +122,7 @@ public class JSON {
 
     /**
      * @return Das JSON-Objekt für eine Liste
-     * */
+     */
     public static <T> JSONObject list(Collection<T> values, Function<T, JSONObject> transform) {
         return list(values.stream().map(transform).toArray(JSONObject[]::new));
     }
@@ -129,7 +130,7 @@ public class JSON {
 
     /**
      * @return Das JSON-Objekt für ein Objekt
-     * */
+     */
     public static JSONObject object(Object... values) {
         if ((values.length & 1) == 1) {
             throw new IllegalArgumentException("Illegal arguments formatting, JSON.object expects an array that alternates between the name and value");
@@ -173,10 +174,34 @@ public class JSON {
         };
     }
 
+    /**
+     * @return Das JSON-Objekt für ein Objekt
+     */
+    public static <T> JSONObject object(Map<String, T> map, Function<T, JSONObject> transform) {
+        var values = new Object[map.size() * 2];
+
+        int i = 0;
+
+        for (var key : map.keySet()) {
+            values[i] = key;
+            values[i + 1] = transform.apply(map.get(key));
+            i += 2;
+        }
+
+        return object(values);
+    }
+
+    /**
+     * @return Das JSON-Objekt für ein Objekt
+     */
+    public static JSONObject object(Map<String, JSONObject> map) {
+        return object(map, o -> o);
+    }
+
 
     /**
      * @return Das JSON-Objekt für einen Boolean
-     * */
+     */
     public static JSONObject bool(boolean value) {
         return new JSONObject() {
             @Override
@@ -195,7 +220,7 @@ public class JSON {
 
     /**
      * Versucht den String als JSON zu lesen
-     * */
+     */
     public static JSONValue parse(String string) throws JSONFormatException {
         if (!basicValidityCheck(string)) {
             var problemCharacters = new StringBuilder();

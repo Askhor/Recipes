@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * Stellt ein gelesenes JSON-Objekt dar
- * */
+ */
 public abstract class JSONValue {
     private static final Pattern INTEGER = Pattern.compile("[-+]?\\d*");
 
@@ -16,13 +16,14 @@ public abstract class JSONValue {
 
     /**
      * Versucht einen Boolean zu lesen
-     * */
+     */
     public boolean bool() throws JSONFormatException {
         throw new JSONFormatException("A boolean was expected, but a " + type() + " was found");
     }
+
     /**
      * Versucht eine Zahl zu lesen
-     * */
+     */
     public int num() throws JSONFormatException {
         throw new JSONFormatException("A number was expected, but a " + type() + " was found");
     }
@@ -30,7 +31,7 @@ public abstract class JSONValue {
 
     /**
      * Versucht eine Zahl zu lesen
-     * */
+     */
     public double real() throws JSONFormatException {
         throw new JSONFormatException("A number was expected, but a " + type() + " was found");
     }
@@ -38,7 +39,7 @@ public abstract class JSONValue {
 
     /**
      * Versucht einen String zu lesen
-     * */
+     */
     public String string() throws JSONFormatException {
         throw new JSONFormatException("A string was expected, but a " + type() + " was found");
     }
@@ -46,7 +47,7 @@ public abstract class JSONValue {
 
     /**
      * Versucht eine Liste zu lesen
-     * */
+     */
     public List<JSONValue> list() throws JSONFormatException {
         throw new JSONFormatException("A list was expected, but a " + type() + " was found");
     }
@@ -54,7 +55,7 @@ public abstract class JSONValue {
 
     /**
      * Versucht ein Objekt zu lesen
-     * */
+     */
     public Map<String, JSONValue> object() throws JSONFormatException {
         throw new JSONFormatException("An object was expected, but a " + type() + " was found");
     }
@@ -91,7 +92,7 @@ public abstract class JSONValue {
                 in.expect('l');
                 yield null;
             }
-            case 't','f' -> readBool(in);
+            case 't', 'f' -> readBool(in);
             default -> {
                 if (!Character.isDigit(c) && c != '.' && c != '-' && c != '+')
                     throw new JSONFormatException("JSON was incorrectly formatted. The problematic characters are " + in.readNext(10));

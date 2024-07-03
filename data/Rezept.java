@@ -20,11 +20,11 @@ public class Rezept {
 
     private String name;
     /**
-     * The categories with which this recipe will be associated
+     * Die Kategorien
      */
     private final Set<Kategorie> kategorien = new HashSet<>();
     /**
-     * A short (or lengthy) introduction to the recipe
+     * Die Beschreibung von dem Rezept
      */
     private String beschreibung;
 
@@ -56,11 +56,10 @@ public class Rezept {
 
     /**
      * @return Ob dieses Rezept tatsächlich zu dieser Kategorie gehörte
-     * */
+     */
     public boolean removeKategorie(Kategorie c) {
         return kategorien.remove(c);
     }
-
 
 
     public void addZutat(ZutatInfo z) {
@@ -69,10 +68,11 @@ public class Rezept {
 
     /**
      * @return Ob die Zutat tatsächlich existierte (also in der Liste aufgeführt war)
-     * */
+     */
     public boolean removeZutat(ZutatInfo z) {
         return zutaten.remove(z);
     }
+
     public Collection<ZutatInfo> getZutaten() {
         return List.copyOf(zutaten);
     }
@@ -80,7 +80,7 @@ public class Rezept {
 
     /**
      * Konvertiert diese Instanz zu der JSON-Representation
-     * */
+     */
     public JSONObject toJSON() {
         return JSON.object(
                 "name", JSON.string(getName()),
@@ -93,7 +93,7 @@ public class Rezept {
 
     /**
      * Lädt die Daten, die in der JSON-Representation gespeichert sind, in dieses Rezept-Objekt
-     * */
+     */
     public void loadJSON(JSONValue json) throws JSONFormatException {
         var obj = json.object();
         setName(obj.get("name").string());

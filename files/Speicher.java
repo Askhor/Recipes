@@ -12,7 +12,7 @@ public class Speicher {
 
     /**
      * Kreiert den Ordner, in dem die Rezepte gespeichert werden, sollte dieser nicht existieren
-     * */
+     */
     private static void ensureExist() throws IOException {
         Files.createDirectories(folder.toPath());
     }
@@ -20,7 +20,7 @@ public class Speicher {
 
     /**
      * Speichert das gegebene Rezept in den files
-     * */
+     */
     public static void speicher(Rezept rezept) {
         try {
             ensureExist();
@@ -35,8 +35,9 @@ public class Speicher {
 
     /**
      * Versucht das Rezept zu laden, dass in dieser File gespeichert ist
+     *
      * @return null, wenn das Rezept nicht geladen werden kann, ansonsten das Rezept
-     * */
+     */
     private static Rezept lade(File file) {
         return null;
     }

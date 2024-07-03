@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * <div>
  * Eine Klasse, die diverse methoden zum UI enthält.
- *</div>
+ * </div>
  * <hr>
  * <div>
  * <b>HINWEIS:</b> UI.initialise() sollte in der main Methode aufgerufen werden, ansonsten könnte das UI sehr seltsam aussehen
@@ -99,5 +99,13 @@ public class UI {
      */
     public static void initialise() {
 
+    }
+
+
+    /**
+     * Versucht so etwas, wie das Hauptfenster zurückzugeben, ansonsten null
+     */
+    public static Window getHauptfenster() {
+        return null;
     }
 }
