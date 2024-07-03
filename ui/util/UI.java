@@ -8,7 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A utility class for various functions relating to ui
+ * <div>
+ * Eine Klasse, die diverse methoden zum UI enthält.
+ *</div>
+ * <hr>
+ * <div>
+ * <b>HINWEIS:</b> UI.initialise() sollte in der main Methode aufgerufen werden, ansonsten könnte das UI sehr seltsam aussehen
+ * </div>
  */
 public class UI {
 
@@ -74,7 +80,7 @@ public class UI {
     }
 
     /**
-     * Creates a line that contains the specified components.
+     * Kreiert eine Zeile, die die spezifizierten Komponenten enthält
      */
     public static JPanel createLine(Component... components) {
         var out = new JPanel();
@@ -89,7 +95,7 @@ public class UI {
     }
 
     /**
-     * Can be called to invoke the static constructors of this class
+     * Wenn diese Methode aufgerufen wird, dann wird garantiert, dass alle static {} Blöcke in dieser Klasse aufgerufen werden
      */
     public static void initialise() {
 

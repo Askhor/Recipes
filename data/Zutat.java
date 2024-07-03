@@ -15,7 +15,7 @@ public record Zutat(String name, Einheit einheit) {
 
     public static Zutat get(String name) {
         if (!ALL_INGREDIENTS.containsKey(name)) {
-            ALL_INGREDIENTS.put(name, new Zutat(name, Einheit.G));
+            ALL_INGREDIENTS.put(name, new Zutat(name, Einheit.GRAMM));
         }
         return ALL_INGREDIENTS.get(name);
     }

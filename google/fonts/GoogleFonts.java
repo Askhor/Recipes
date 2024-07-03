@@ -2,6 +2,7 @@ package google.fonts;
 
 import files.json.JSON;
 import files.json.JSONFormatException;
+import secrets.Secrets;
 
 import java.awt.*;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 
 public class GoogleFonts {
-    private static final String VERY_SECRET_API_KEY = "AIzaSyBuAuZmcuSeWJO5odJKPZsL10MY3bxqaww";
+    private static final String VERY_SECRET_API_KEY = Secrets.getSecret("Google API-Key");
     private static final HashMap<String, Font> loadedFonts = new HashMap<>();
 
     public static Font get(String name) {
