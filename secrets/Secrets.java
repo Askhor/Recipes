@@ -8,6 +8,6 @@ public class Secrets {
      * Gibt die geheime Info zurück, die den Namen trägt
      * */
     public static String getSecret(String name) {
-
+        return null;
     }
 }
