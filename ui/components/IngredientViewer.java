@@ -21,12 +21,12 @@ public class IngredientViewer extends JPanel {
     private void initialise(ZutatInfo ingredient) {
         text.setText(
                 ""
-                + ingredient.getAmount()
-                + ingredient.getIngredient().einheit()
+                + ingredient.getMenge()
+                + ingredient.getZutat().einheit()
                 + " "
-                + ingredient.getIngredient().name()
+                + ingredient.getZutat().name()
                 + " "
-                + ingredient.getNotes()
+                + ingredient.getNotizen()
 
         );
     }

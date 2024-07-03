@@ -1,5 +1,6 @@
 package data;
 
+import files.Speicher;
 import files.json.JSON;
 import files.json.JSONFormatException;
 import files.json.JSONObject;
@@ -11,6 +12,12 @@ import java.util.*;
  * Represents entire recipes
  */
 public class Rezept {
+    private final static List<Rezept> ALLE_REZEPTE = new ArrayList<>();
+
+    static {
+        ALLE_REZEPTE.addAll(List.of(Speicher.ladeAlle()));
+    }
+
     private String name;
     /**
      * The categories with which this recipe will be associated
@@ -47,13 +54,25 @@ public class Rezept {
         kategorien.add(c);
     }
 
-    public void removeKategorie(Kategorie c) {
-        kategorien.remove(c);
+    /**
+     * @return Ob dieses Rezept tatsächlich zu dieser Kategorie gehörte
+     * */
+    public boolean removeKategorie(Kategorie c) {
+        return kategorien.remove(c);
+    }
+
+
+
+    public void addZutat(ZutatInfo z) {
+        zutaten.add(z);
     }
 
     /**
-     * Finds and add up all the ingredients that each step of the recipe needs
-     */
+     * @return Ob die Zutat tatsächlich existierte (also in der Liste aufgeführt war)
+     * */
+    public boolean removeZutat(ZutatInfo z) {
+        return zutaten.remove(z);
+    }
     public Collection<ZutatInfo> getZutaten() {
         return List.copyOf(zutaten);
     }
@@ -75,8 +94,10 @@ public class Rezept {
         for (var c : obj.get("kategorien").list())
             addKategorie(Kategorie.get(c.string()));
 
-        //setIntroduction(obj.get("beschreibung").string());
+        setBeschreibung(obj.get("beschreibung").string());
 
+        for (var z : obj.get("zutaten").list()) {
 
+        }
     }
 }

@@ -3,19 +3,19 @@ package data;
 import java.util.HashMap;
 import java.util.Map;
 
-public record Ingredient(String name, Einheit einheit) {
-    private final static Map<String, Ingredient> ALL_INGREDIENTS = new HashMap<>();
+public record Zutat(String name, Einheit einheit) {
+    private final static Map<String, Zutat> ALL_INGREDIENTS = new HashMap<>();
 
     /**
      * Ensures that is only ever one effective instance that represents an ingredient
      */
-    public Ingredient intern() {
+    public Zutat intern() {
         return get(name);
     }
 
-    public static Ingredient get(String name) {
+    public static Zutat get(String name) {
         if (!ALL_INGREDIENTS.containsKey(name)) {
-            ALL_INGREDIENTS.put(name, new Ingredient(name, Einheit.G));
+            ALL_INGREDIENTS.put(name, new Zutat(name, Einheit.G));
         }
         return ALL_INGREDIENTS.get(name);
     }
