@@ -16,6 +16,12 @@ public class Rezept {
 
     static {
         ALLE_REZEPTE.addAll(List.of(Speicher.ladeAlle()));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+            for (var r : getAlleRezepte()) {
+                r.speicher();
+            }
+        }));
     }
 
     private String name;
@@ -77,6 +83,9 @@ public class Rezept {
         return List.copyOf(zutaten);
     }
 
+    public void speicher() {
+        Speicher.speicher(this);
+    }
 
     /**
      * Konvertiert diese Instanz zu der JSON-Representation
@@ -104,7 +113,13 @@ public class Rezept {
         setBeschreibung(obj.get("beschreibung").string());
 
         for (var z : obj.get("zutaten").list()) {
-
+            var zutat = new ZutatInfo();
+            zutat.loadJSON(z);
+            addZutat(zutat);
         }
+    }
+
+    public static Collection<Rezept> getAlleRezepte() {
+        return List.copyOf(ALLE_REZEPTE);
     }
 }
