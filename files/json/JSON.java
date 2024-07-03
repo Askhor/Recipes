@@ -1,5 +1,7 @@
 package files.json;
 
+import files.LineStream;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
@@ -91,7 +93,7 @@ public class JSON {
                         out.indent();
                         for (var v : values) {
                             out.newLine();
-                            out.print(v);
+                            v.print(out);
                             out.print(',');
                         }
                         out.deleteLast();
@@ -99,7 +101,7 @@ public class JSON {
                         out.newLine();
                     } else {
                         for (var v : values) {
-                            out.print(v);
+                            v.print(out);
                             out.print(',');
                             out.space();
                         }
@@ -156,7 +158,7 @@ public class JSON {
                         out.print('"');
                         out.print(':');
                         out.space();
-                        out.print((JSONObject) values[i + 1]);
+                        ((JSONObject) values[i + 1]).print(out);
                         out.print(',');
                     }
                     out.deleteLast();

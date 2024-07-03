@@ -1,3 +1,3 @@
-# Recipes
+# Rezepte
 
-An Editor, Manager and Viewer for Recipes
+Ein Rezept Editor halt :)

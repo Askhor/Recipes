@@ -1,5 +1,7 @@
 package files.json;
 
+import files.LineStream;
+
 public abstract class JSONObject {
     protected abstract void print(LineStream out);
 

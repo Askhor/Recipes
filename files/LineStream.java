@@ -1,6 +1,13 @@
-package files.json;
+package files;
 
+
+/**
+ * Mit dieser Klasse kann man die Kreierung von mehrzeiligen Strings zwischen Klassen aufteilen
+ * */
 public interface LineStream {
+    /**
+     * Fängt eine neue Zeile mit dem jetzigen indent an
+     * */
     void newLine();
 
     void indent();
@@ -19,8 +26,12 @@ public interface LineStream {
 
     void print(String string);
 
-    default void print(JSONObject o) {
-        o.print(this);
+    /**
+     * Fängt eine neue Zeile mit dem jetzigen indent an und schreib den String rein
+     */
+    default void line(String string) {
+        newLine();
+        print(string);
     }
 
     class ToString implements LineStream {
@@ -34,6 +45,13 @@ public interface LineStream {
             this.space = space;
             this.newLine = newLine;
             indentString = indent;
+        }
+
+        /**
+         * Kreiert eine neue LineStream Instanz mit default parametern
+         * */
+        public ToString() {
+            this(" ", "\n", " ".repeat(4));
         }
 
         @Override
