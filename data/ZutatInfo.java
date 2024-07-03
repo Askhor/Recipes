@@ -37,18 +37,24 @@ public class ZutatInfo {
         this.notizen = notizen;
     }
 
+    /**
+     * Konvertiert diese Instanz zu der JSON-Representation
+     * */
     public JSONObject toJSON() {
         return JSON.object(
                 "name", JSON.string(zutat.name()),
-                "amount", JSON.num(menge),
-                "notes", JSON.string(notizen)
+                "menge", JSON.num(menge),
+                "notizen", JSON.string(notizen)
         );
     }
 
+    /**
+     * Lädt die Daten, die in der JSON-Representation gespeichert sind, in dieses ZutatInfo-Objekt
+     * */
     public void loadJSON(JSONValue json) throws JSONFormatException {
         var obj = json.object();
         setZutat(Zutat.get(obj.get("name").string()));
-        setMenge(obj.get("amount").num());
-        setNotizen(obj.get("notes").string());
+        setMenge(obj.get("menge").num());
+        setNotizen(obj.get("notizen").string());
     }
 }

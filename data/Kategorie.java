@@ -16,7 +16,7 @@ public final class Kategorie {
     }
 
     /**
-     * @return The category with the name or creates a new category with the name
+     * @return Die Kategorie mit dem Namen oder eine neue Kategorie mit dem Namen
      */
     public static Kategorie get(String name) {
         var current = INSTANCES.get(name);

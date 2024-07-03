@@ -78,6 +78,9 @@ public class Rezept {
     }
 
 
+    /**
+     * Konvertiert diese Instanz zu der JSON-Representation
+     * */
     public JSONObject toJSON() {
         return JSON.object(
                 "name", JSON.string(getName()),
@@ -87,6 +90,10 @@ public class Rezept {
         );
     }
 
+
+    /**
+     * Lädt die Daten, die in der JSON-Representation gespeichert sind, in dieses Rezept-Objekt
+     * */
     public void loadJSON(JSONValue json) throws JSONFormatException {
         var obj = json.object();
         setName(obj.get("name").string());

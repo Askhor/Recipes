@@ -7,7 +7,7 @@ public record Zutat(String name, Einheit einheit) {
     private final static Map<String, Zutat> ALL_INGREDIENTS = new HashMap<>();
 
     /**
-     * Ensures that is only ever one effective instance that represents an ingredient
+     * Gibt die Zutat Instanz für den Namen zurück
      */
     public Zutat intern() {
         return get(name);
