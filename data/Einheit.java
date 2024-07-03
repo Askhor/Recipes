@@ -1,10 +1,10 @@
 package data;
 
-public enum Unit {
-    ML("ml"), G("g");
+public enum Einheit {
+    MILLILITER("ml"), GRAMM("g"), STUECK("stück");
     public final String name;
 
-    Unit(String name) {
+    Einheit(String name) {
         this.name = name;
     }
 

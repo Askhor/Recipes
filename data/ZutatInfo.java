@@ -5,7 +5,7 @@ import files.json.JSONFormatException;
 import files.json.JSONObject;
 import files.json.JSONValue;
 
-public class IngredientInfo {
+public class ZutatInfo {
     private Ingredient ingredient;
     private int amount;
     private String notes;

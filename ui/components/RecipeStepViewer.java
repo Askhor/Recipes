@@ -1,6 +1,5 @@
 package ui.components;
 
-import data.RecipeStep;
 import ui.util.UI;
 
 import javax.swing.*;

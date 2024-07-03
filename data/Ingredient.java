@@ -3,7 +3,7 @@ package data;
 import java.util.HashMap;
 import java.util.Map;
 
-public record Ingredient(String name, Unit unit) {
+public record Ingredient(String name, Einheit einheit) {
     private final static Map<String, Ingredient> ALL_INGREDIENTS = new HashMap<>();
 
     /**
@@ -15,7 +15,7 @@ public record Ingredient(String name, Unit unit) {
 
     public static Ingredient get(String name) {
         if (!ALL_INGREDIENTS.containsKey(name)) {
-            ALL_INGREDIENTS.put(name, new Ingredient(name, Unit.G));
+            ALL_INGREDIENTS.put(name, new Ingredient(name, Einheit.G));
         }
         return ALL_INGREDIENTS.get(name);
     }

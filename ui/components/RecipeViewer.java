@@ -1,6 +1,6 @@
 package ui.components;
 
-import data.Recipe;
+import data.Rezept;
 import ui.util.UI;
 
 import javax.swing.*;
@@ -40,20 +40,20 @@ public class RecipeViewer extends JPanel {
         }
     }
 
-    public RecipeViewer(Recipe recipe) {
-        initialise(recipe);
+    public RecipeViewer(Rezept rezept) {
+        initialise(rezept);
     }
 
-    private void initialise(Recipe recipe) {
-        title.setText(recipe.getName());
+    private void initialise(Rezept rezept) {
+        title.setText(rezept.getName());
 
         ingredients.removeAll();
-        for (var i : recipe.getIngredients()) {
+        for (var i : rezept.getIngredients()) {
             ingredients.add(new IngredientViewer(i));
         }
 
         steps.removeAll();
-        for (var s : recipe.getSteps()) {
+        for (var s : rezept.getSteps()) {
             steps.add(new RecipeStepViewer(s));
         }
     }

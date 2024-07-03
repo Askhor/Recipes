@@ -1,6 +1,6 @@
 package ui.components;
 
-import data.IngredientInfo;
+import data.ZutatInfo;
 
 import javax.swing.*;
 
@@ -14,15 +14,15 @@ public class IngredientViewer extends JPanel {
         add(Box.createGlue());
     }
 
-    public IngredientViewer(IngredientInfo ingredient) {
+    public IngredientViewer(ZutatInfo ingredient) {
         initialise(ingredient);
     }
 
-    private void initialise(IngredientInfo ingredient) {
+    private void initialise(ZutatInfo ingredient) {
         text.setText(
                 ""
                 + ingredient.getAmount()
-                + ingredient.getIngredient().unit()
+                + ingredient.getIngredient().einheit()
                 + " "
                 + ingredient.getIngredient().name()
                 + " "
