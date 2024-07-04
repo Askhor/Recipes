@@ -17,11 +17,10 @@ import data.Rezept;
 public class Fenster extends JFrame {
 	
 	private Collection<Rezept> alleRezepte;
-	private DefaultListModel<Rezept> rezeptListModel;
-	private JList<Rezept> rezeptList;
+	private final DefaultListModel<Rezept> rezeptListModel;
+	private final JList<Rezept> rezeptList;
 	
 	public Fenster() {
-
 		setTitle("Rezeptbuch");
 		setSize(720, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,7 +45,6 @@ public class Fenster extends JFrame {
 		panelListe.add(rezeptList);
 		updateRezeptList();
 		add(new JScrollPane(rezeptList), BorderLayout.CENTER);
-		
 	}
 	
 	private void updateRezeptList() {
@@ -61,7 +59,6 @@ public class Fenster extends JFrame {
 		if (name != null && !name.isEmpty()) {
 			Rezept neuesRezept = new Rezept();
 			neuesRezept.setName(name);
-			Rezept.getAlleRezepte().add(neuesRezept);
 			neuesRezept.speicher();
 			updateRezeptList();
 		}
@@ -80,11 +77,4 @@ public class Fenster extends JFrame {
 			JOptionPane.showMessageDialog(this, "Wählen Sie ein Rezept aus, das gelöscht werden soll.", "Kein Rezept ausgewählt", JOptionPane.WARNING_MESSAGE);
 		}
 	}
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			Fenster frame = new Fenster();
-		});
-	}
-
 }

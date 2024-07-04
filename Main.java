@@ -1,9 +1,11 @@
 import ui.Fenster;
 import ui.util.UI;
 
+import javax.swing.*;
+
 public class Main {
     public static void main(String... args) {
         UI.initialise();
-        new Fenster();
+        SwingUtilities.invokeLater(Fenster::new);
     }
 }
