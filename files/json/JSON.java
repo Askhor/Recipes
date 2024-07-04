@@ -4,6 +4,7 @@ import files.LineStream;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -61,6 +62,11 @@ public class JSON {
         return new JSONObject() {
             @Override
             protected void print(LineStream out) {
+                if (string == null) {
+                    out.print("null");
+                    return;
+                }
+
                 out.print('"');
                 out.print(string
                         .replace("\\", "\\\\")
@@ -85,6 +91,11 @@ public class JSON {
         return new JSONObject() {
             @Override
             protected void print(LineStream out) {
+                if (values == null) {
+                    out.print("null");
+                    return;
+                }
+
                 var lines = isMultiline();
 
                 out.print('[');
@@ -126,6 +137,8 @@ public class JSON {
      * @return Das JSON-Objekt für eine Liste
      */
     public static <T> JSONObject list(Collection<T> values, Function<T, JSONObject> transform) {
+        if (values == null)
+            return list((JSONObject) null);
         return list(values.stream().map(transform).toArray(JSONObject[]::new));
     }
 
@@ -134,6 +147,19 @@ public class JSON {
      * @return Das JSON-Objekt für ein Objekt
      */
     public static JSONObject object(Object... values) {
+        if (values == null) {
+            return new JSONObject() {
+                @Override
+                protected void print(LineStream out) {
+                    out.print("null");
+                }
+
+                @Override
+                protected boolean isMultiline() {
+                    return false;
+                }
+            };
+        }
         if ((values.length & 1) == 1) {
             throw new IllegalArgumentException("Illegal arguments formatting, JSON.object expects an array that alternates between the name and value");
         }
@@ -180,6 +206,9 @@ public class JSON {
      * @return Das JSON-Objekt für ein Objekt
      */
     public static <T> JSONObject object(Map<String, T> map, Function<T, JSONObject> transform) {
+        if (map == null)
+            return object((Object) null);
+
         var values = new Object[map.size() * 2];
 
         int i = 0;

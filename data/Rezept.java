@@ -24,7 +24,10 @@ public class Rezept {
         }));
     }
 
-    private String name;
+    {
+        ALLE_REZEPTE.add(this);
+    }
+    private String name = "";
     /**
      * Die Kategorien
      */
@@ -32,7 +35,7 @@ public class Rezept {
     /**
      * Die Beschreibung von dem Rezept
      */
-    private String beschreibung;
+    private String beschreibung = "";
 
     private final ArrayList<ZutatInfo> zutaten = new ArrayList<>();
 

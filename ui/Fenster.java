@@ -1,6 +1,5 @@
 package ui;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.Collection;
 
 import javax.swing.DefaultListModel;
@@ -59,7 +58,6 @@ public class Fenster extends JFrame {
 		if (name != null && !name.isEmpty()) {
 			Rezept neuesRezept = new Rezept();
 			neuesRezept.setName(name);
-			neuesRezept.speicher();
 			updateRezeptList();
 		}
 	}
@@ -69,7 +67,6 @@ public class Fenster extends JFrame {
 		if (selectedRezept != null) {
 			int response = JOptionPane.showConfirmDialog(this, "Wollen Sie das Rezept löschen?", "Rezept löschen", JOptionPane.YES_NO_OPTION);
 			if (response == JOptionPane.YES_OPTION) {
-				Rezept.getAlleRezepte().remove(selectedRezept);
 				selectedRezept.speicher();
 				updateRezeptList();
 			}

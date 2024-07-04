@@ -10,8 +10,8 @@ import files.json.JSONValue;
  */
 public class ZutatInfo {
     private Zutat zutat;
-    private int menge;
-    private String notizen;
+    private int menge = -1;
+    private String notizen = "";
 
     public Zutat getZutat() {
         return zutat;
