@@ -122,6 +122,11 @@ public class Rezept {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Rezept: "+ getName();
+    }
+
     public static Collection<Rezept> getAlleRezepte() {
         return List.copyOf(ALLE_REZEPTE);
     }
