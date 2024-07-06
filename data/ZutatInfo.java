@@ -9,8 +9,8 @@ import files.json.JSONValue;
  * Speichert zusätzlich zu welcher Zutat es isst, auch wie viel davon und Notizen
  */
 public class ZutatInfo {
-    private Zutat zutat;
-    private int menge = -1;
+    private Zutat zutat = Zutat.DEFAULT;
+    private int menge = 0;
     private String notizen = "";
 
     public Zutat getZutat() {
@@ -44,7 +44,8 @@ public class ZutatInfo {
         return JSON.object(
                 "name", JSON.string(zutat.name()),
                 "menge", JSON.num(menge),
-                "notizen", JSON.string(notizen)
+                "notizen", JSON.string(notizen),
+                "einheit", JSON.string(zutat.getEinheit().canonicalName)
         );
     }
 
@@ -54,6 +55,7 @@ public class ZutatInfo {
     public void loadJSON(JSONValue json) throws JSONFormatException {
         var obj = json.object();
         setZutat(Zutat.get(obj.get("name").string()));
+        getZutat().setEinheit(Einheit.valueOf(obj.get("einheit").string().toUpperCase()));
         setMenge(obj.get("menge").num());
         setNotizen(obj.get("notizen").string());
     }

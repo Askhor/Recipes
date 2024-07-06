@@ -3,11 +3,11 @@ package files;
 
 /**
  * Mit dieser Klasse kann man die Kreierung von mehrzeiligen Strings zwischen Klassen aufteilen
- * */
+ */
 public interface LineStream {
     /**
      * Fängt eine neue Zeile mit dem jetzigen indent an
-     * */
+     */
     void newLine();
 
     void indent();
@@ -49,7 +49,7 @@ public interface LineStream {
 
         /**
          * Kreiert eine neue LineStream Instanz mit default parametern
-         * */
+         */
         public ToString() {
             this(" ", "\n", " ".repeat(4));
         }

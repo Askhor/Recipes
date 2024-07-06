@@ -109,7 +109,7 @@ public class HtmlConverter {
             out.indent();
             for (var z : rezept.getZutaten()) {
                 var name = z.getZutat().name();
-                var einheit = z.getZutat().einheit().name;
+                var einheit = z.getZutat().getEinheit().name;
                 var menge = z.getMenge();
                 var notizen = z.getNotizen();
 

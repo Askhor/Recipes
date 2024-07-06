@@ -9,6 +9,13 @@ import java.util.Map;
 public final class Kategorie {
     private static final Map<String, Kategorie> INSTANCES = new HashMap<>();
 
+    static {
+        get("Vegetarisch");
+        get("Vegan");
+        get("Einfach");
+        get("Schnell");
+    }
+
     private String name;
 
     private Kategorie(String name) {
@@ -19,10 +26,10 @@ public final class Kategorie {
      * @return Die Kategorie mit dem Namen oder eine neue Kategorie mit dem Namen
      */
     public static Kategorie get(String name) {
-        var current = INSTANCES.get(name);
+        var current = INSTANCES.get(name.toLowerCase().strip());
         if (current != null) return current;
         current = new Kategorie(name);
-        INSTANCES.put(name, current);
+        INSTANCES.put(name.toLowerCase().strip(), current);
         return current;
     }
 
@@ -36,10 +43,10 @@ public final class Kategorie {
      * @throws IllegalArgumentException if there is already another category with that name
      */
     public void setName(String name) {
-        if (INSTANCES.containsKey(name))
+        if (INSTANCES.containsKey(name.toLowerCase().strip()))
             throw new IllegalArgumentException("There is already a category with the name " + name);
-        INSTANCES.put(this.name, null);
-        INSTANCES.put(name, this);
+        INSTANCES.put(this.name.toLowerCase().strip(), null);
+        INSTANCES.put(name.toLowerCase().strip(), this);
         this.name = name;
     }
 }

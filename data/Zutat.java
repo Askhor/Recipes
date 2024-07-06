@@ -2,24 +2,48 @@ package data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-/**
- * Speichert Zutaten und die dazugehörigen Namen, es sollte nur eine Instanz pro Name geben, aber während dem editieren dürfen auch mehrere existieren
- */
-public record Zutat(String name, Einheit einheit) {
+public final class Zutat {
+
     private final static Map<String, Zutat> ALL_INGREDIENTS = new HashMap<>();
+    public static final Zutat DEFAULT = get("Nichts");
+    private final String name;
+    private Einheit einheit;
 
-    /**
-     * Gibt die EINE Zutat Instanz mit dem Namen zurück
-     */
-    public Zutat intern() {
-        return get(name);
+    private Zutat(String name, Einheit einheit) {
+        this.name = name;
+        this.einheit = einheit;
     }
 
     public static Zutat get(String name) {
-        if (!ALL_INGREDIENTS.containsKey(name)) {
-            ALL_INGREDIENTS.put(name, new Zutat(name, Einheit.GRAMM));
+        if (!ALL_INGREDIENTS.containsKey(name.toLowerCase())) {
+            ALL_INGREDIENTS.put(name.toLowerCase(), new Zutat(name, Einheit.STUECK));
         }
-        return ALL_INGREDIENTS.get(name);
+        return ALL_INGREDIENTS.get(name.toLowerCase());
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public Einheit getEinheit() {
+        return einheit;
+    }
+
+    public void setEinheit(Einheit e) {
+        einheit = e;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, einheit);
+    }
+
+    @Override
+    public String toString() {
+        return "Zutat[" +
+               "name=" + name + ", " +
+               "einheit=" + einheit + ']';
     }
 }
