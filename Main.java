@@ -1,6 +1,4 @@
 import ui.Fenster;
-import ui.components.Content;
-import ui.util.SimpleAction;
 import ui.util.UI;
 
 import javax.swing.*;

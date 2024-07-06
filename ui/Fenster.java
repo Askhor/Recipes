@@ -5,6 +5,8 @@ import ui.components.MainMenu;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Das Applikations-Fenster
@@ -16,6 +18,14 @@ public class Fenster extends JFrame {
         setSize(720, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (content == null) return;
+                content.close();
+            }
+        });
     }
 
     public Fenster(Content c) {

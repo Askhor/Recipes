@@ -14,12 +14,23 @@ import java.awt.*;
  */
 public class RezeptViewer extends Content {
     private final Rezept rezept;
+    private int portionenAnzahl = 1;
 
     public RezeptViewer(Rezept rezept) {
         this.rezept = rezept;
 
         setLayout(new BorderLayout());
-        add(menu = new SideMenu(true, true, true, true, true, true, false), BorderLayout.WEST);
+        add(menu = new SideMenu(
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                Einkaufsliste.zurEinkaufslisteHinzufugen(() -> portionenAnzahl),
+                Wochenplan.zumWochenplanHinzufugen()
+        ), BorderLayout.WEST);
         menu.setSelectedRezept(rezept);
 
         populateComponents();
@@ -39,7 +50,7 @@ public class RezeptViewer extends Content {
      * Fügt noch die ganzen Hauptkomponenten ein
      */
     private void populateComponents() {
-        JPanel main = new JPanel();
+        JPanel main = new MagicWidthPanel();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(main);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -157,6 +168,7 @@ public class RezeptViewer extends Content {
 
         private void onPortionenChange() {
             int anzahlPortionen = ((SpinnerNumberModel) portionen.getModel()).getNumber().intValue();
+            portionenAnzahl = anzahlPortionen; // wat
 
             for (Component c : list.getComponents()) {
                 if (c instanceof Zutat z) {
@@ -214,6 +226,37 @@ public class RezeptViewer extends Content {
             setWrapStyleWord(true);
 
             setText(rezept.getBeschreibung());
+        }
+    }
+
+    /**
+     * Diese Klasse sollte in einer JScrollPane nicht breiter werden können. <br>
+     * Sie sollte eigentlich gar nicht existieren müssen, aber ...
+     */
+    public static class MagicWidthPanel extends JPanel implements Scrollable {
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 10;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return ((orientation == SwingConstants.VERTICAL) ? visibleRect.height : visibleRect.width) - 10;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return false;
         }
     }
 }

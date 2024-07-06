@@ -5,7 +5,7 @@ import java.awt.*;
 
 /**
  * Diese Klasse funktioniert nicht
- * */
+ */
 @Deprecated()
 public class MarkdownViewer extends JPanel {
     private final JEditorPane pane = new JEditorPane();

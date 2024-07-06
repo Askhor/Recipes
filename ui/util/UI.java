@@ -3,7 +3,10 @@ package ui.util;
 import google.fonts.GoogleFonts;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +22,7 @@ import java.util.Map;
 public class UI {
 
     public static final Map<String, Font> ALL_FONTS = new HashMap<>();
-    private static final String[] FONT_HIERARCHY = {"Anonymous Pro", "Comic Sans MS", "Arial"};
+    private static final String[] FONT_HIERARCHY = {"Times New Roman", "Comic Sans MS", "Arial"};
 
     static {
         for (var f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
@@ -95,17 +98,18 @@ public class UI {
     }
 
     /**
+     * Fügt den Text dem Clipboard hinzu
+     * */
+    public static void copyToClipboard(String text) {
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                new StringSelection(text), null
+        );
+    }
+
+    /**
      * Wenn diese Methode aufgerufen wird, dann wird garantiert, dass alle static {} Blöcke in dieser Klasse aufgerufen werden
      */
     public static void initialise() {
 
-    }
-
-
-    /**
-     * Versucht so etwas, wie das Hauptfenster zurückzugeben, ansonsten null
-     */
-    public static Window getHauptfenster() {
-        return null;
     }
 }

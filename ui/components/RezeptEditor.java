@@ -55,7 +55,7 @@ public class RezeptEditor extends Content {
      * Fügt noch die ganzen Hauptkomponenten ein
      */
     private void populateComponents() {
-        JPanel main = new JPanel();
+        JPanel main = new RezeptViewer.MagicWidthPanel();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(main);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -214,6 +214,7 @@ public class RezeptEditor extends Content {
                 JPopupMenu contextMenu = new JPopupMenu(k.getName());
 
                 contextMenu.add("Kategorie " + k.getName());
+                contextMenu.addSeparator();
                 contextMenu.add(new SimpleAction("Entfernen", this::entfernen));
 
                 setComponentPopupMenu(contextMenu);
@@ -374,6 +375,8 @@ public class RezeptEditor extends Content {
                 });
 
                 JPopupMenu contextMenu = new JPopupMenu();
+                contextMenu.add(new SimpleAction("Nach oben", () -> bewegen(true)));
+                contextMenu.add(new SimpleAction("Nach unten", () -> bewegen(false)));
                 contextMenu.add(new SimpleAction("Entfernen", () -> {
                     rezept.removeZutat(zutat);
                     list.remove(this);
@@ -384,6 +387,21 @@ public class RezeptEditor extends Content {
                 for (Component c : getComponents()) {
                     if (c instanceof JComponent jc) jc.setInheritsPopupMenu(true);
                 }
+            }
+
+            private void bewegen(boolean nachOben) {
+                if (nachOben) {
+                    rezept.zutatMoveUp(zutat);
+                } else {
+                    rezept.zutatMoveDown(zutat);
+                }
+
+                int index = rezept.getZutaten().indexOf(zutat);
+
+                list.remove(this);
+                list.add(this, index);
+
+                list.validate();
             }
 
             private void onZutatInputChange() {

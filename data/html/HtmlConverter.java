@@ -2,12 +2,16 @@ package data.html;
 
 
 import data.Rezept;
+import data.Tuple2;
 import files.LineStream;
 
 /**
  * Eine Klasse, ob die Rezepte auch als html ausgeben zu können
  */
 public class HtmlConverter {
+    /**
+     * Stellt das Rezept mit HTML dar
+     */
     public static String convert(Rezept rezept) {
         var out = new LineStream.ToString(" ", "\n", " ".repeat(4));
 
@@ -33,6 +37,46 @@ public class HtmlConverter {
         out.line("</html>");
 
         return out.toString();
+    }
+
+    /**
+     * Stellt die Einkaufsliste mit HTML dar
+     */
+    public static String convertEinkaufsliste(Tuple2<String, Boolean>... zutaten) {
+        StringBuilder html = new StringBuilder("""
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Einkaufen (nicht vergessen)</title>
+                    <style>
+                        li:has(input:checked) {
+                            color: grey;
+                            text-decoration: line-through;
+                        }
+                    </style>
+                </head>
+                <body>
+                <ul>
+                """);
+
+        for (var t : zutaten) {
+            html.append("<li>");
+            html.append("<input type=\"checkbox\"");
+            if (t.b())
+                html.append(" checked");
+            html.append(">");
+            html.append(t.a());
+            html.append("</li>\n");
+        }
+
+        html.append("""                
+                </ul>
+                </body>
+                </html>
+                """);
+
+        return html.toString();
     }
 
     private static void head(Rezept rezept, LineStream out) {

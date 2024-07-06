@@ -106,7 +106,7 @@ public class Rezept implements Comparable<Rezept> {
 
     /**
      * Verändert die Ordnung, in der die Zutaten aufgeführt werden
-     * */
+     */
     public void zutatMoveUp(ZutatInfo z) {
         if (!zutaten.contains(z)) throw new IllegalArgumentException("Die Zutat ist gar nicht in dem Rezept enthalten");
 
@@ -119,7 +119,7 @@ public class Rezept implements Comparable<Rezept> {
 
     /**
      * Verändert die Ordnung, in der die Zutaten aufgeführt werden
-     * */
+     */
     public void zutatMoveDown(ZutatInfo z) {
         if (!zutaten.contains(z)) throw new IllegalArgumentException("Die Zutat ist gar nicht in dem Rezept enthalten");
 
@@ -129,7 +129,7 @@ public class Rezept implements Comparable<Rezept> {
         zutaten.add(index + 1, z);
     }
 
-    public Collection<ZutatInfo> getZutaten() {
+    public List<ZutatInfo> getZutaten() {
         return List.copyOf(zutaten);
     }
 
@@ -143,11 +143,15 @@ public class Rezept implements Comparable<Rezept> {
      * Konvertiert diese Instanz zu der JSON-Representation
      */
     public JSONObject toJSON() {
+
         return JSON.object(
                 "name", JSON.string(getName()),
                 "kategorien", JSON.list(getKategorien(), c -> JSON.string(c.getName())),
                 "beschreibung", JSON.string(getBeschreibung()),
-                "zutaten", JSON.list(getZutaten(), ZutatInfo::toJSON)
+                "zutaten", JSON.list(
+                        getZutaten().stream().filter(z -> z.getMenge() > 0).toList(),
+                        ZutatInfo::toJSON
+                )
         );
     }
 

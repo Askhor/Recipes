@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 /**
  * Das Menü, das dann halt immer an der Seite rumhängt
@@ -22,7 +23,7 @@ public class SideMenu extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
-    public SideMenu(boolean newRecipe, boolean deleteRecipe, boolean newWindow, boolean backToMenu, boolean exportAsHtml, boolean edit, boolean view) {
+    public SideMenu(boolean newRecipe, boolean deleteRecipe, boolean newWindow, boolean backToMenu, boolean exportAsHtml, boolean edit, boolean view, CustomButton... customButtons) {
         if (view)
             add(new JButton(new SimpleAction("View", this::view)));
         if (edit)
@@ -33,8 +34,14 @@ public class SideMenu extends JPanel {
             add(new JButton(new SimpleAction("Neues Rezept", this::neuesRezept)));
         if (deleteRecipe)
             add(new JButton(new SimpleAction("Rezept Löschen", this::rezeptLoschen)));
+
+        add(Box.createVerticalStrut(20));
+
         if (exportAsHtml)
             add(new JButton(new SimpleAction("Export als HTML", this::htmlExport)));
+
+        for (CustomButton c : customButtons)
+            add(new JButton(new SimpleAction(c.name, () -> c.action.accept(selectedRezept))));
 
         add(Box.createVerticalGlue());
 
@@ -90,7 +97,7 @@ public class SideMenu extends JPanel {
                 JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(this), "Die HTML-Datei wurde gespeichert unter " + file.toAbsolutePath());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(SwingUtilities.windowForComponent(this), "Das Rezept konnte nicht als HTML-datei exportiert werden");
         }
     }
 
@@ -145,5 +152,8 @@ public class SideMenu extends JPanel {
 
     public void setSelectedRezept(Rezept rezept) {
         this.selectedRezept = rezept;
+    }
+
+    public record CustomButton(String name, Consumer<Rezept> action) {
     }
 }

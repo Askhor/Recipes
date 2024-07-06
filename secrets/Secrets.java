@@ -2,7 +2,6 @@ package secrets;
 
 import files.json.JSON;
 import files.json.JSONFormatException;
-import ui.util.UI;
 
 import javax.swing.*;
 import java.io.File;
@@ -71,7 +70,7 @@ public class Secrets {
     }
 
     private static String promptForSecret(String name) {
-        String input = JOptionPane.showInputDialog(UI.getHauptfenster(), "Enter the secret for " + name, "");
+        String input = JOptionPane.showInputDialog(null, "Enter the secret for " + name, "");
 
         if (input == null) {
             return null;

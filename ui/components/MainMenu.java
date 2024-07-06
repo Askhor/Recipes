@@ -33,7 +33,17 @@ public class MainMenu extends Content {
     public MainMenu() {
         setLayout(new BorderLayout());
 
-        add(menu = new SideMenu(true, true, true, false, true, true, false), BorderLayout.WEST);
+        add(menu = new SideMenu(
+                true,
+                true,
+                true,
+                false,
+                true,
+                true,
+                false,
+                Einkaufsliste.zurEinkaufslisteHinzufugen(() -> 1),
+                Wochenplan.zumWochenplanHinzufugen()
+        ), BorderLayout.WEST);
 
         add(new Suche(), BorderLayout.NORTH);
 
