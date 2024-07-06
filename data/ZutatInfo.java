@@ -45,7 +45,7 @@ public class ZutatInfo {
                 "name", JSON.string(zutat.name()),
                 "menge", JSON.num(menge),
                 "notizen", JSON.string(notizen),
-                "einheit", JSON.string(zutat.getEinheit().canonicalName)
+                "einheit", JSON.string(zutat.getEinheit().name())
         );
     }
 

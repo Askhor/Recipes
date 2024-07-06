@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * Der tatsächliche Rezept-Editor
@@ -23,7 +23,7 @@ public class RezeptEditor extends Content {
     /**
      * Die Menge aller Rezepte, die gerade editiert werden
      */
-    private static final HashSet<Rezept> rezepteImEditor = new HashSet<>();
+    private static final HashMap<Rezept, RezeptEditor> rezepteImEditor = new HashMap<>();
 
     private final Rezept rezept;
 
@@ -31,11 +31,11 @@ public class RezeptEditor extends Content {
         if (wirdEditiert(rezept)) {
             throw new IllegalStateException("Ein Rezept darf nicht zwei mal gleichzeitig editiert werden");
         }
-        rezepteImEditor.add(rezept);
+        rezepteImEditor.put(rezept, this);
         this.rezept = rezept;
 
         setLayout(new BorderLayout());
-        add(menu = new SideMenu(true, true, true, true, true), BorderLayout.WEST);
+        add(menu = new SideMenu(true, true, true, true, true, false, true), BorderLayout.WEST);
         menu.setSelectedRezept(rezept);
 
         populateComponents();
@@ -103,9 +103,16 @@ public class RezeptEditor extends Content {
      * Ob das Rezept in einem Editor offen ist
      */
     public static boolean wirdEditiert(Rezept rezept) {
-        return rezepteImEditor.contains(rezept);
+        return rezepteImEditor.containsKey(rezept);
     }
 
+
+    /**
+     * Falls das Rezept gerade editiert wird, wird der dazugehörige Editor zurückgegeben, ansonsten null
+     */
+    public static RezeptEditor getEditor(Rezept rezept) {
+        return rezepteImEditor.get(rezept);
+    }
 
     private class Titel extends JTextField {
         {
@@ -159,7 +166,7 @@ public class RezeptEditor extends Content {
             add(Box.createGlue());
         }
 
-        private abstract class Element extends JButton {
+        private abstract static class Element extends JButton {
             public Element(Action a, Color borderColor) {
                 super(a);
 
@@ -197,7 +204,6 @@ public class RezeptEditor extends Content {
 
         private class Kategorie extends Element {
             private final data.Kategorie k;
-            private final JPopupMenu contextMenu;
             private final Component spacing;
 
             public Kategorie(data.Kategorie k, int index) {
@@ -205,11 +211,10 @@ public class RezeptEditor extends Content {
                 }), Color.DARK_GRAY);
                 this.k = k;
 
-                contextMenu = new JPopupMenu(k.getName());
+                JPopupMenu contextMenu = new JPopupMenu(k.getName());
 
                 contextMenu.add("Kategorie " + k.getName());
                 contextMenu.add(new SimpleAction("Entfernen", this::entfernen));
-                //contextMenu.add(new SimpleAction("Löschen", this::loschen));
 
                 setComponentPopupMenu(contextMenu);
 
@@ -232,7 +237,7 @@ public class RezeptEditor extends Content {
         private class NeueKategorie extends Element {
             public NeueKategorie() {
                 super(new SimpleAction("Neue Kategorie", () -> {
-                }), new Color(0, 100, 0));
+                }), new Color(0, 180, 0));
             }
 
             @Override
@@ -288,9 +293,8 @@ public class RezeptEditor extends Content {
         }
 
         private class Zutat extends JPanel {
-            private ZutatInfo zutat;
+            private final ZutatInfo zutat;
 
-            private final JPopupMenu contextMenu = new JPopupMenu();
             private final JTextField mengenInput = new JTextField(5);
             private final JComboBox<Einheit> einheitInput = new JComboBox<>(Einheit.values());
             private final JTextField zutatInput = new JTextField();
@@ -305,6 +309,8 @@ public class RezeptEditor extends Content {
                 zutatInput.setText(zutat.getZutat().name());
                 notizenInput.setText(zutat.getNotizen());
 
+                mengenInput.setHorizontalAlignment(JTextField.RIGHT);
+
                 setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
                 add(Box.createHorizontalStrut(20));
@@ -312,6 +318,7 @@ public class RezeptEditor extends Content {
                 add(mengenInput);
                 add(einheitInput);
                 add(zutatInput);
+                add(Box.createHorizontalStrut(40));
                 add(notizenInput);
 
                 add(Box.createHorizontalGlue());
@@ -366,6 +373,7 @@ public class RezeptEditor extends Content {
                     }
                 });
 
+                JPopupMenu contextMenu = new JPopupMenu();
                 contextMenu.add(new SimpleAction("Entfernen", () -> {
                     rezept.removeZutat(zutat);
                     list.remove(this);

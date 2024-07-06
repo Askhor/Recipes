@@ -22,19 +22,57 @@ public class SideMenu extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
-    public SideMenu(boolean newRecipe, boolean deleteRecipe, boolean newWindow, boolean backToMenu, boolean exportAsHtml) {
+    public SideMenu(boolean newRecipe, boolean deleteRecipe, boolean newWindow, boolean backToMenu, boolean exportAsHtml, boolean edit, boolean view) {
+        if (view)
+            add(new JButton(new SimpleAction("View", this::view)));
+        if (edit)
+            add(new JButton(new SimpleAction("Edit", this::edit)));
+        if (newWindow)
+            add(new JButton(new SimpleAction("Neues Fenster", this::neuesFenster)));
         if (newRecipe)
             add(new JButton(new SimpleAction("Neues Rezept", this::neuesRezept)));
         if (deleteRecipe)
             add(new JButton(new SimpleAction("Rezept Löschen", this::rezeptLoschen)));
-        if (newWindow)
-            add(new JButton(new SimpleAction("Neues Fenster", this::neuesFenster)));
         if (exportAsHtml)
             add(new JButton(new SimpleAction("Export als HTML", this::htmlExport)));
+
+        add(Box.createVerticalGlue());
+
         if (backToMenu)
             add(new JButton(new SimpleAction("Zurück zum Menu", this::zumMenu)));
 
-        add(Box.createVerticalBox());
+    }
+
+    private void view() {
+        if (selectedRezept == null) {
+            JOptionPane.showMessageDialog(this, "Wähle ein Rezept aus, um es anzuzeigen");
+            return;
+        }
+
+        if (!(SwingUtilities.windowForComponent(this) instanceof Fenster f)) {
+            System.err.println("SideMenu wurde dazu konstruiert, in einem Fenster verwendet zu sein");
+            return;
+        }
+
+        f.setContent(new RezeptViewer(selectedRezept));
+    }
+
+    private void edit() {
+        if (selectedRezept == null) {
+            JOptionPane.showMessageDialog(this, "Wähle ein Rezept aus, um es zu editieren");
+            return;
+        }
+        if (RezeptEditor.wirdEditiert(selectedRezept)) {
+            RezeptEditor.getEditor(selectedRezept).requestFocus();
+            return;
+        }
+
+        if (!(SwingUtilities.windowForComponent(this) instanceof Fenster f)) {
+            System.err.println("SideMenu wurde dazu konstruiert, in einem Fenster verwendet zu sein");
+            return;
+        }
+
+        f.setContent(new RezeptEditor(selectedRezept));
     }
 
     private void htmlExport() {
@@ -101,12 +139,7 @@ public class SideMenu extends JPanel {
             new Fenster();
             return;
         }
-
-        if (RezeptEditor.wirdEditiert(selectedRezept)) {
-            new Fenster();
-        } else {
-            new Fenster(new RezeptEditor(selectedRezept));
-        }
+        new Fenster(new RezeptViewer(selectedRezept));
     }
 
 

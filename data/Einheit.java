@@ -4,13 +4,11 @@ package data;
  * Die Einheit für eine Zutat: Volumen, Masse oder Stückzahl
  */
 public enum Einheit {
-    MILLILITER("ml", "MILLILITER"), GRAMM("g", "GRAMM"), STUECK("stück", "STUECK");
+    MILLILITER("ml"), GRAMM("g"), STUECK("stück");
     public final String name;
-    public final String canonicalName;
 
-    Einheit(String name, String canonicalName) {
+    Einheit(String name) {
         this.name = name;
-        this.canonicalName = canonicalName;
     }
 
 

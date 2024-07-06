@@ -3,6 +3,7 @@ package ui.components;
 import data.Kategorie;
 import data.Rezept;
 import ui.Fenster;
+import ui.util.UI;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,7 +12,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -33,7 +33,7 @@ public class MainMenu extends Content {
     public MainMenu() {
         setLayout(new BorderLayout());
 
-        add(menu = new SideMenu(true, true, true, false, true), BorderLayout.WEST);
+        add(menu = new SideMenu(true, true, true, false, true, true, false), BorderLayout.WEST);
 
         add(new Suche(), BorderLayout.NORTH);
 
@@ -54,11 +54,7 @@ public class MainMenu extends Content {
                     Rezept selection = rezeptList.getSelectedValue();
                     if (selection == null) return;
 
-                    if (RezeptEditor.wirdEditiert(selection)) {
-                        JOptionPane.showMessageDialog(MainMenu.this, "Das Rezept " + selection.getName() + " wird bereits in einem anderen Fenster editiert");
-                    } else {
-                        f.setContent(new RezeptEditor(selection));
-                    }
+                    f.setContent(new RezeptViewer(selection));
                 }
             }
         });
@@ -96,6 +92,9 @@ public class MainMenu extends Content {
         public Suche() {
             setLayout(new BorderLayout());
             add(new JLabel("Suche: "), BorderLayout.WEST);
+            JLabel eastern = new JLabel("#<Kategorie>, um nach Kategorien zu suchen");
+            eastern.setFont(UI.getFont(14));
+            add(eastern, BorderLayout.EAST);
             add(textInput, BorderLayout.CENTER);
 
             textInput.setInheritsPopupMenu(true);
