@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ import java.util.Map;
  * </div>
  */
 public class UI {
+    private static final String USER_FONT_FILE = "AppData\\Local\\Rezepte\\userfont.txt";
     private static final Resources<BufferedImage> bilder = new Resources<>(s -> {
         try {
             return ImageIO.read(s);
@@ -31,7 +34,12 @@ public class UI {
         }
     });
     public static final Map<String, Font> ALL_FONTS = new HashMap<>();
-    private static final String[] FONT_HIERARCHY = {"Times New Roman", "Comic Sans MS", "Arial"};
+    private static final String[] FONT_HIERARCHY = {userPreferenceFont(), "Arial", "Comic Sans MS"};
+
+    /**
+     * A way cooler cursor that whatever you have
+     * */
+    public static final Cursor COOL_CURSOR = createTheCoolCursor();
 
     static {
         for (var f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
@@ -40,7 +48,7 @@ public class UI {
         }
     }
 
-    private static final Font GLOBAL_FONT = findBestGlobalFont();
+    private static Font GLOBAL_FONT = findBestGlobalFont();
 
     static {
         try {
@@ -53,7 +61,7 @@ public class UI {
     }
 
     static {
-        setGlobalFont(getFont(20));
+        setFontGlobally(getFont(20), false);
     }
 
     /**
@@ -61,9 +69,10 @@ public class UI {
      */
     private static Font findBestGlobalFont() {
         for (var name : FONT_HIERARCHY) {
-            Font font = ALL_FONTS.get(name);
-            if (font != null) return font;
-            font = GoogleFonts.get(name);
+
+            if (name == null) continue;
+
+            Font font = tryResolveToFont(name);
             if (font != null) return font;
         }
 
@@ -80,7 +89,7 @@ public class UI {
     /**
      * Sets the font for all ui components
      */
-    private static void setGlobalFont(Font font) {
+    private static void setFontGlobally(Font font, boolean updateCurrentComponents) {
         // Thank the lord for Stackoverflow
         for (var key : UIManager.getDefaults().keySet()) {
             var value = UIManager.get(key);
@@ -89,6 +98,31 @@ public class UI {
                 UIManager.put(key, font);
             }
         }
+
+        if (updateCurrentComponents) {
+            for (Window w : Window.getWindows()) {
+                resetFontRecursive(w);
+            }
+        }
+    }
+
+    private static void resetFontRecursive(Component c) {
+        c.setFont(getFont(c.getFont().getSize2D()));
+
+        if (c instanceof Container con) {
+            for (Component child : con.getComponents()) {
+                resetFontRecursive(child);
+            }
+        }
+    }
+
+    private static Font tryResolveToFont(String name) {
+
+        Font font = ALL_FONTS.get(name);
+        if (font != null) return font;
+
+        font = GoogleFonts.get(name);
+        return font;
     }
 
     /**
@@ -125,14 +159,66 @@ public class UI {
 
     /**
      * Gibt das Icon mit dem Ressourcennamen zurück
-     * */
+     */
     public static Icon getIcon(String name) {
         return new ImageIcon(getIconImage(name));
     }
+
     /**
      * Gibt das Bild mit dem Ressourcennamen zurück
-     * */
+     */
     public static Image getIconImage(String name) {
         return bilder.get(name);
+    }
+
+    /**
+     * @return The font that was set by the user
+     */
+    private static String userPreferenceFont() {
+        try {
+            File file = new File(System.getProperty("user.home"), USER_FONT_FILE);
+            if (!file.exists()) {
+                System.out.println("User hat keinen eigenen Font gesetzt");
+                return null;
+            }
+            return Files.readString(file.toPath());
+        } catch (IOException e) {
+            System.err.println("User-Font konnte nicht geladen werden\n" + e.getLocalizedMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Versucht den Applikations-Font zu den spezifizierten zu wechseln
+     *
+     * @return Ob der name einen validen Font spezifiziert hatte
+     */
+    public static boolean trySetGlobalFont(String name) {
+        Font font = tryResolveToFont(name);
+        if (font == null) return false;
+        GLOBAL_FONT = font;
+
+        try {
+            File file = new File(System.getProperty("user.home"), USER_FONT_FILE);
+            Files.createDirectories(file.toPath().getParent());
+            file.createNewFile();
+            Files.writeString(file.toPath(), name);
+        } catch (IOException e) {
+            System.err.println("User-Font konnte nicht gespeichert werden\n" + e.getLocalizedMessage());
+        }
+
+        setFontGlobally(font, true);
+
+        return true;
+    }
+
+    private static Cursor createTheCoolCursor() {
+        return Toolkit
+                .getDefaultToolkit()
+                .createCustomCursor(
+                        getIconImage("/bilder/cursor.png"),
+                        new Point(8,8),
+                        "Cooler Cursor"
+                );
     }
 }

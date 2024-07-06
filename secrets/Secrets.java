@@ -16,7 +16,7 @@ import java.util.Map;
 public class Secrets {
     private static final String USER_HOME = System.getProperty("user.home");
     private static final File folder = new File(USER_HOME, "AppData\\Local\\Rezepte\\Secrets");
-    private static final boolean PROMPT_ON_MISSING_KEY = true;
+    private static final boolean PROMPT_ON_MISSING_KEY = false;
 
     private static final Map<String, String> SECRETS = new HashMap<>();
 
@@ -55,6 +55,14 @@ public class Secrets {
         if (value != null) return value;
 
         return onNotFound(name);
+    }
+
+    /**
+     * Speichert die geheime Info
+     * */
+    public static void putSecret(String name, String value) {
+        SECRETS.put(name, value);
+        save();
     }
 
     private static String onNotFound(String name) {

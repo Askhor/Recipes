@@ -42,7 +42,8 @@ public class MainMenu extends Content {
                 true,
                 false,
                 Einkaufsliste.zurEinkaufslisteHinzufugen(() -> 1),
-                Wochenplan.zumWochenplanHinzufugen()
+                Wochenplan.zumWochenplanHinzufugen(),
+                new SideMenu.CustomButton("Font",  r -> FontEinstellungen.offnen())
         ), BorderLayout.WEST);
 
         add(new Suche(), BorderLayout.NORTH);

@@ -16,7 +16,8 @@ import java.util.HashMap;
 
 public class GoogleFonts {
     private static final File tempDir = new File(System.getProperty("java.io.tmpdir"));
-    private static final String VERY_SECRET_API_KEY = Secrets.getSecret("Google API-Key");
+    private static final String SECRET_NAME = "Google API-Key";
+    private static String VERY_SECRET_API_KEY = Secrets.getSecret(SECRET_NAME);
     private static final HashMap<String, Font> loadedFonts = new HashMap<>();
     private static final File cacheDir = new File(tempDir, "Google Fonts");
 
@@ -41,7 +42,7 @@ public class GoogleFonts {
         File file = getCacheFile(name);
 
         if (!file.exists()) {
-            System.err.println("Font " + name + " not found in cache");
+            System.out.println("Font " + name + " not found in cache");
             return;
         }
 
@@ -135,5 +136,17 @@ public class GoogleFonts {
             }
         }
         return URI.create(out.toString().replace(" ", "%20"));
+    }
+
+    /**
+     * Hiermit kann ein neuer Key für die API gesetzt werden
+     */
+    public static void setVerySecretApiKey(String key) {
+        if (key.isBlank()) {
+            return;
+        }
+
+        VERY_SECRET_API_KEY = key;
+        Secrets.putSecret(SECRET_NAME, VERY_SECRET_API_KEY);
     }
 }

@@ -29,6 +29,7 @@ public class Fenster extends JFrame {
         });
 
         setIconImage(UI.getIconImage("/bilder/icon.png"));
+        setCursor(UI.COOL_CURSOR);
     }
 
     public Fenster(Content c) {
