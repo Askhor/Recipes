@@ -3,6 +3,7 @@ package ui.components;
 import data.Rezept;
 import ui.Fenster;
 import ui.util.SimpleAction;
+import ui.util.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +57,7 @@ public class Wochenplan extends Content {
         controls.add(new JButton(new SimpleAction("Hoch", this::hochDamit)));
         controls.add(Box.createVerticalStrut(10));
         {
-            JButton delete = new JButton(new SimpleAction("X", this::wegDamit));
+            JButton delete = new JButton(new SimpleAction(UI.getIcon("/bilder/müll smol.png"), this::wegDamit));
             controls.add(delete);
             delete.setForeground(Color.RED);
         }

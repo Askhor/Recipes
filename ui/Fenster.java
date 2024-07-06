@@ -2,6 +2,7 @@ package ui;
 
 import ui.components.Content;
 import ui.components.MainMenu;
+import ui.util.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,8 @@ public class Fenster extends JFrame {
                 content.close();
             }
         });
+
+        setIconImage(UI.getIconImage("/bilder/icon.png"));
     }
 
     public Fenster(Content c) {

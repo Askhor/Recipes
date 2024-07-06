@@ -1,12 +1,14 @@
 package ui.util;
 
+import files.Resources;
 import google.fonts.GoogleFonts;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,14 @@ import java.util.Map;
  * </div>
  */
 public class UI {
-
+    private static final Resources<BufferedImage> bilder = new Resources<>(s -> {
+        try {
+            return ImageIO.read(s);
+        } catch (IOException e) {
+            System.err.println("Bild konnte nicht geladen werden\n" + e.getMessage());
+            return null;
+        }
+    });
     public static final Map<String, Font> ALL_FONTS = new HashMap<>();
     private static final String[] FONT_HIERARCHY = {"Times New Roman", "Comic Sans MS", "Arial"};
 
@@ -99,7 +108,7 @@ public class UI {
 
     /**
      * Fügt den Text dem Clipboard hinzu
-     * */
+     */
     public static void copyToClipboard(String text) {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
                 new StringSelection(text), null
@@ -111,5 +120,19 @@ public class UI {
      */
     public static void initialise() {
 
+    }
+
+
+    /**
+     * Gibt das Icon mit dem Ressourcennamen zurück
+     * */
+    public static Icon getIcon(String name) {
+        return new ImageIcon(getIconImage(name));
+    }
+    /**
+     * Gibt das Bild mit dem Ressourcennamen zurück
+     * */
+    public static Image getIconImage(String name) {
+        return bilder.get(name);
     }
 }

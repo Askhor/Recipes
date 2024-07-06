@@ -23,6 +23,10 @@ public class SimpleAction extends AbstractAction {
         this(text, e -> action.run());
     }
 
+    public SimpleAction(Icon icon, Runnable action) {
+        this("", icon, e -> action.run());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         action.accept(e);
