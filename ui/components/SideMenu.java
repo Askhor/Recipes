@@ -124,7 +124,7 @@ public class SideMenu extends JPanel {
             return;
         }
 
-        int ergebnis = JOptionPane.showConfirmDialog(this, "Willst du wirklich " + selectedRezept.getName() + " löschen?");
+        int ergebnis = JOptionPane.showConfirmDialog(this, "Willst du wirklich " + selectedRezept.getName() + " löschen?", "Rezepte fragen nach:", JOptionPane.OK_CANCEL_OPTION);
 
         switch (ergebnis) {
             case JOptionPane.OK_OPTION -> selectedRezept.loschen();
