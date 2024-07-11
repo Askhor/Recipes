@@ -102,7 +102,6 @@ public class Wochenplan extends Content {
         if (value == null) return;
 
         int index = rezepte.indexOf(value);
-        System.out.println(index);
         if (index == 0) return;
 
         rezepte.remove(index);
@@ -120,7 +119,6 @@ public class Wochenplan extends Content {
         if (value == null) return;
 
         int index = rezepte.indexOf(value);
-        System.out.println(index);
         if (index == rezepte.size() - 1) return;
 
         rezepte.remove(index);

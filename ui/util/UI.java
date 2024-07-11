@@ -34,7 +34,7 @@ public class UI {
         }
     });
     public static final Map<String, Font> ALL_FONTS = new HashMap<>();
-    private static final String[] FONT_HIERARCHY = {userPreferenceFont(), "Arial", "Comic Sans MS"};
+    private static final String[] FONT_HIERARCHY = {userPreferenceFont(), "Arial", "Comic Sans MS", "Times New Roman"};
 
     /**
      * A way cooler cursor that whatever you have
@@ -69,14 +69,14 @@ public class UI {
      */
     private static Font findBestGlobalFont() {
         for (var name : FONT_HIERARCHY) {
-
             if (name == null) continue;
 
             Font font = tryResolveToFont(name);
             if (font != null) return font;
         }
 
-        throw new Error("None of the specified fonts are available.\nThe only available fonts are " + ALL_FONTS.keySet());
+        //throw new Error("None of the specified fonts are available.\nThe only available fonts are " + ALL_FONTS.keySet());
+        return getDefaultFont();
     }
 
     /**
@@ -220,5 +220,9 @@ public class UI {
                         new Point(8,8),
                         "Cooler Cursor"
                 );
+    }
+
+    private static Font getDefaultFont() {
+        return new JLabel().getFont();
     }
 }

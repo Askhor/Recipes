@@ -87,7 +87,7 @@ public class Speicher {
      **/
     public static Stream<Rezept> ladeAlle() {
         File[] files = folder.listFiles(rezeptFileFilter);
-        Objects.requireNonNull(files);
+        if (files == null) return Stream.empty();
 
         return Arrays.stream(files)
                 .map(file -> {

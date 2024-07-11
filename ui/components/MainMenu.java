@@ -96,7 +96,7 @@ public class MainMenu extends Content {
     }
 
     class Suche extends JPanel {
-        private static final Pattern suchPattern = Pattern.compile("\\s*([\\w#]+)?(\\s+[\\w#]+)*\\s*");
+        private static final Pattern suchPattern = Pattern.compile("\\s*([\\w#äüöß]+)?(\\s+[\\w#äüöß]+)*\\s*");
         private final JTextField textInput = new JTextField();
         private final JCheckBox regex = new JCheckBox("Regex");
 
@@ -145,7 +145,7 @@ public class MainMenu extends Content {
                 }
             } else {
                 if (!suchPattern.matcher(textInput.getText()).matches()) {
-                    textInput.setForeground(new Color(160, 0, 0, 0));
+                    textInput.setForeground(new Color(160, 0, 0));
                     return;
                 }
                 textInput.setForeground(Color.BLACK);
