@@ -33,20 +33,12 @@ public class UI {
             return null;
         }
     });
-    public static final Map<String, Font> ALL_FONTS = new HashMap<>();
-    private static final String[] FONT_HIERARCHY = {userPreferenceFont(), "Arial", "Comic Sans MS", "Times New Roman"};
+    private static final String[] FONT_HIERARCHY = {userPreferenceFont(), Font.DIALOG};
 
     /**
      * A way cooler cursor that whatever you have
      * */
     public static final Cursor COOL_CURSOR = createTheCoolCursor();
-
-    static {
-        for (var f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
-            if (f.isPlain())
-                ALL_FONTS.put(f.getName(), f);
-        }
-    }
 
     private static Font GLOBAL_FONT = findBestGlobalFont();
 
@@ -75,8 +67,7 @@ public class UI {
             if (font != null) return font;
         }
 
-        //throw new Error("None of the specified fonts are available.\nThe only available fonts are " + ALL_FONTS.keySet());
-        return getDefaultFont();
+        throw new Error("None of the specified fonts are available.");
     }
 
     /**
@@ -117,8 +108,8 @@ public class UI {
     }
 
     private static Font tryResolveToFont(String name) {
+        Font font = Font.decode(name);
 
-        Font font = ALL_FONTS.get(name);
         if (font != null) return font;
 
         font = GoogleFonts.get(name);
@@ -220,9 +211,5 @@ public class UI {
                         new Point(8,8),
                         "Cooler Cursor"
                 );
-    }
-
-    private static Font getDefaultFont() {
-        return new JLabel().getFont();
     }
 }
