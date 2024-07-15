@@ -1,6 +1,7 @@
 package ui.util;
 
 import files.Resources;
+import files.Speicher;
 import google.fonts.GoogleFonts;
 
 import javax.imageio.ImageIO;
@@ -8,9 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import java.util.Map;
  * </div>
  */
 public class UI {
-    private static final String USER_FONT_FILE = "AppData\\Local\\Rezepte\\userfont.txt";
+    private static Path USER_FONT_FILE = Speicher.getPath("userfont.txt");
     private static final Resources<BufferedImage> bilder = new Resources<>(s -> {
         try {
             return ImageIO.read(s);
@@ -167,12 +168,11 @@ public class UI {
      */
     private static String userPreferenceFont() {
         try {
-            File file = new File(System.getProperty("user.home"), USER_FONT_FILE);
-            if (!file.exists()) {
+            if (!Files.exists(USER_FONT_FILE)) {
                 System.out.println("User hat keinen eigenen Font gesetzt");
                 return null;
             }
-            return Files.readString(file.toPath());
+            return Files.readString(USER_FONT_FILE);
         } catch (IOException e) {
             System.err.println("User-Font konnte nicht geladen werden\n" + e.getLocalizedMessage());
             return null;
@@ -190,10 +190,8 @@ public class UI {
         GLOBAL_FONT = font;
 
         try {
-            File file = new File(System.getProperty("user.home"), USER_FONT_FILE);
-            Files.createDirectories(file.toPath().getParent());
-            file.createNewFile();
-            Files.writeString(file.toPath(), name);
+            Files.createDirectories(USER_FONT_FILE.getParent());
+            Files.writeString(USER_FONT_FILE, name);
         } catch (IOException e) {
             System.err.println("User-Font konnte nicht gespeichert werden\n" + e.getLocalizedMessage());
         }
