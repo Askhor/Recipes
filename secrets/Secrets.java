@@ -4,9 +4,10 @@ import files.json.JSON;
 import files.json.JSONFormatException;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,17 +15,16 @@ import java.util.Map;
  * Diese Klasse ist dazu da, API-Keys zu speichern, ohne dass diese auf GitHub landen oder so
  */
 public class Secrets {
-    private static final String USER_HOME = System.getProperty("user.home");
-    private static final File folder = new File(USER_HOME, "AppData\\Local\\Rezepte\\Secrets");
+    private static final Path USER_HOME = Paths.get(System.getProperty("user.home"));
+    private static final Path file = USER_HOME.resolve(Paths.get("AppData", "Local", "Rezepte", "secrets.json"));
     private static final boolean PROMPT_ON_MISSING_KEY = false;
 
     private static final Map<String, String> SECRETS = new HashMap<>();
 
     private static void reload() {
-        File file = new File(folder, "secrets.json");
-        if (!file.exists()) return;
+        if (Files.notExists(file)) return;
         try {
-            var json = JSON.parse(Files.readString(file.toPath()));
+            var json = JSON.parse(Files.readString(file));
             var object = json.object();
 
             for (var key : object.keySet()) {
@@ -37,10 +37,10 @@ public class Secrets {
 
     private static void save() {
         try {
-            Files.createDirectories(folder.toPath());
-            File file = new File(folder, "secrets.json");
-            file.createNewFile();
-            Files.writeString(file.toPath(), JSON.object(SECRETS, JSON::string).toString());
+            Files.createDirectories(file.getParent());
+            if (Files.notExists(file))
+                Files.createFile(file);
+            Files.writeString(file, JSON.object(SECRETS, JSON::string).toString());
         } catch (IOException e) {
             System.err.println("Could not save secrets because: " + e.getMessage());
         }

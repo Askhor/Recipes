@@ -4,22 +4,27 @@ import data.Rezept;
 import files.json.JSON;
 import files.json.JSONFormatException;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
+import java.util.function.Predicate;
 
 public class Speicher {
-    private static final String USER_HOME = System.getProperty("user.home");
-    private static final File folder = new File(USER_HOME, "AppData\\Local\\Rezepte");
-    private static final FileFilter rezeptFileFilter = pathname -> {
-        String name = pathname.getName();
+    private static final Path USER_HOME = Paths.get(System.getProperty("user.home"));
+    private static final Path folder = USER_HOME.resolve(Paths.get("AppData", "Local", "Rezepte"));
+    private static final Predicate<Path> rezeptFileFilter = pathname -> {
+        String name = pathname.getFileName().toString();
         if (name.indexOf('.') == -1) return false;
         return name.substring(name.lastIndexOf('.')).equals(".rezept");
     };
+
+    public static Path getPath(String filename) {
+        return folder.resolve(filename);
+    }
 
     private static String getFileName(Rezept rezept) {
         return rezept.getName() + ".rezept";
@@ -29,7 +34,7 @@ public class Speicher {
      * Kreiert den Ordner, in dem die Rezepte gespeichert werden, sollte dieser nicht existieren
      */
     private static void ensureExist() throws IOException {
-        Files.createDirectories(folder.toPath());
+        Files.createDirectories(folder);
     }
 
 
@@ -39,9 +44,8 @@ public class Speicher {
     public static void speicher(Rezept rezept) {
         try {
             ensureExist();
-            File afile = new File(folder, getFileName(rezept));
-            afile.createNewFile();
-            Files.writeString(afile.toPath(), rezept.toJSON().toString());
+            Path afile = getPath(getFileName(rezept));
+            Files.writeString(afile, rezept.toJSON().toString());
         } catch (IOException e) {
             System.err.println("Da war 'n Error beim Speichern von so 'nem Rezept: \n" + e.getMessage());
         }
@@ -49,9 +53,10 @@ public class Speicher {
     }
 
     public static void loschen(Rezept rezept) {
-        File file = new File(folder, getFileName(rezept));
-        if (file.exists()) {
-            file.delete();
+        try {
+            Files.deleteIfExists(getPath(getFileName(rezept)));
+        } catch (IOException e) {
+            System.err.println("Datei konnte nicht gelöscht werden");
         }
     }
 
@@ -60,7 +65,7 @@ public class Speicher {
      *
      * @return null, wenn das Rezept nicht geladen werden kann, ansonsten das Rezept
      */
-    private static Rezept lade(String name, File file) {
+    private static Rezept lade(String name, Path file) {
         Rezept ziel = null;
 
         for (Rezept r : Rezept.getAlleRezepte()) {
@@ -74,7 +79,7 @@ public class Speicher {
         }
 
         try {
-            ziel.loadJSON(JSON.parse(Files.readString(file.toPath())));
+            ziel.loadJSON(JSON.parse(Files.readString(file)));
         } catch (JSONFormatException | IOException e) {
             System.err.println("Das Rezept " + name + " konnte nicht geladen werden:\n" + e.getMessage());
         }
@@ -86,13 +91,14 @@ public class Speicher {
      * Gibt alle Rezepte zurück, die geladen werden konnten
      **/
     public static Stream<Rezept> ladeAlle() {
-        File[] files = folder.listFiles(rezeptFileFilter);
-        if (files == null) return Stream.empty();
-
-        return Arrays.stream(files)
-                .map(file -> {
-                    String name = file.getName();
-                    return lade(name.substring(0, name.lastIndexOf('.')), file);
-                });
+        try {
+            return Files.list(folder).filter(rezeptFileFilter)
+            .map(file -> {
+                String name = file.getFileName().toString();
+                return lade(name.substring(0, name.lastIndexOf('.')), file);
+            });
+        } catch (IOException e) {
+            return Stream.empty();
+        }
     }
 }
